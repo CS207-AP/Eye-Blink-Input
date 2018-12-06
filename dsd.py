@@ -17,6 +17,22 @@ class obj:
         self.base_img = []
         self.means_array=[]
         
+    def find_feature(self, img_color):
+        img_gray = cv2.cvtColor(img_color, cv2.COLOR_BGR2GRAY)
+        faces = self.prim.detectMultiScale(img_gray, 1.3, 5)
+        if(len(faces)>0):
+            fx,fy,fw,fh = faces[0]
+            face_color = img_color[fy:fy+fw, fx:fx+fh]
+            face_gray = img_gray[fy:fy+fw, fx:fx+fh]
+            eyes = self.sec.detectMultiScale(face_gray)
+            if(len(eyes)>0):
+                ex,ey,ew,eh = eyes[0]
+                return face_color[ey:ey+ew, ex:ex+eh]
+            else:
+                return None
+        else:
+            return None
+    
     def initialize_means_roi(self):
         for state_imgs in self.base_img:
             roi_means = []
@@ -37,22 +53,31 @@ class obj:
                 fin_means.append(sum(arr)/len(arr))
             self.means_array.append(fin_means)
         self.means_array_transposed = [list(x) for x in zip(*self.means_array)]
+    
+    def min_dif(self, val, arr):
+        darr = list(map((lambda x: abs(x-val)), arr))
+        return darr.index(min(darr))
+    
+    def array_diff(self, arr1, arr2):
+        toret =  0
+        for a1, a2 in zip(arr1, arr2):
+            toret = toret + abs(a1-a2)    
+        return toret
 
-
-
-    def find_feature(self, img_color):
-        img_gray = cv2.cvtColor(img_color, cv2.COLOR_BGR2GRAY)
-        faces = self.prim.detectMultiScale(img_gray, 1.3, 5)
-        if(len(faces)>0):
-            fx,fy,fw,fh = faces[0]
-            face_color = img_color[fy:fy+fw, fx:fx+fh]
-            face_gray = img_gray[fy:fy+fw, fx:fx+fh]
-            eyes = self.sec.detectMultiScale(face_gray)
-            if(len(eyes)>0):
-                ex,ey,ew,eh = eyes[0]
-                return face_color[ey:ey+ew, ex:ex+eh]
-            else:
-                return None
-        else:
-            return None
-   
+    def initialize(self, comm_method):
+        cap = cv2.VideoCapture(0)
+        for state in self.possible_states:
+            not_init = 0
+            comm_method("Please keep "+self.obj_name+" in "+state+" state for next 5 seconds.")
+            time.sleep(2)
+            bas_imgs = []
+            while(not_init<100):
+                ret, img = cap.read()
+                fet = self.find_feature(img)
+                if(type(fet)!=type(None)):
+                    bas_imgs.append(fet)
+                    not_init=not_init+1
+            self.base_img.append(bas_imgs)
+            comm_method(state+" initizalized.")
+            time.sleep(2)
+        return cap
