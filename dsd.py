@@ -64,6 +64,26 @@ class obj:
             toret = toret + abs(a1-a2)    
         return toret
 
+    def detect1(self, img):
+        fet = self.find_feature(img)
+        if(type(fet)!=type(None)):
+            width = len(fet)
+            height = len(fet[0])
+            roi_mean_array =[]
+            state_arr=[]
+            for roi in self.rois:
+                x1 = int(width*roi[0])
+                x2 = int(width*roi[1])
+                y1 = int(height*roi[2])
+                y2 = int(height*roi[3])
+                roi_mean_array.extend([fet[:,:,0][x1:x2,y1:y2].mean()])#, fet[:,:,1][x1:x2,y1:y2].mean(), fet[:,:,2][x1:x2,y1:y2].mean()])
+            diffs = []
+            for base_state_roi_mean in self.means_array:
+                diffs.append(self.array_diff(base_state_roi_mean, roi_mean_array))
+            return ("Status", self.possible_states[diffs.index(min(diffs))])
+        else:
+            return ("Error", "Object Not Found")
+
     def initialize(self, comm_method):
         cap = cv2.VideoCapture(0)
         for state in self.possible_states:
