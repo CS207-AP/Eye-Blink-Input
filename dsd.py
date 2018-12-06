@@ -84,6 +84,27 @@ class obj:
         else:
             return ("Error", "Object Not Found")
 
+    def detect2(self, img):
+        fet = self.find_feature(img)
+        if(type(fet)!=type(None)):
+            width = len(fet)
+            height = len(fet[0])
+            roi_mean_array =[]
+            state_arr=[]
+            for roi in self.rois:
+                x1 = int(width*roi[0])
+                x2 = int(width*roi[1])
+                y1 = int(height*roi[2])
+                y2 = int(height*roi[3])
+                roi_mean_array.extend([fet[:,:,0][x1:x2,y1:y2].mean()])#, fet[:,:,1][x1:x2,y1:y2].mean(), fet[:,:,2][x1:x2,y1:y2].mean()])
+            for mean, base_state_roi_mean in zip(roi_mean_array, self.means_array_transposed):
+                ind = self.min_dif(mean, base_state_roi_mean)
+                state_arr.append(self.possible_states[ind])
+            return ("Status", max(set(state_arr), key=state_arr.count))
+        else:
+            return ("Error", "Object Not Found")
+        
+
     def initialize(self, comm_method):
         cap = cv2.VideoCapture(0)
         for state in self.possible_states:
