@@ -95,6 +95,24 @@ class Ex {
    f.setVisible(true);
    int closed, opened, closedin, openedin, k;
    long n1;
+   
+   long n = System.currentTimeMillis();
+   while (System.currentTimeMillis() - n < 5000); //wait for 5 seconds then remove all labels
+   for (int i = 0; i < 6; i++) {
+    for (int j = 0; j < 7; ++j) {
+     labels[i][j].setVisible(false);
+    }
+   }
+
+   int index = 0;
+   boolean flag=true;
+
+   while (flag) {
+    closed = 0;
+    opened = 0;
+
+    for (int i = 0; i < 6; ++i)
+     labels[i][index].setVisible(true);
   }
  }
 }
