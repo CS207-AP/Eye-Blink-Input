@@ -1,8 +1,9 @@
-import javax.swing.*;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import javax.swing.*;
 
 class Ex {
  public static void main(String args[]) throws Exception {
@@ -11,13 +12,13 @@ class Ex {
    ServerSocket server = new ServerSocket(8960);
    Socket client = server.accept();
    BufferedReader inFromClient = new BufferedReader(new InputStreamReader(client.getInputStream()));
-   
-   
+
+
    JFrame f = new JFrame("Label Example");
    JLabel[][] labels;
    f.setSize(800, 800);
 
-     String c[][] = {
+   String c[][] = {
     {
      "END",
      "E",
@@ -95,6 +96,7 @@ class Ex {
    f.setVisible(true);
    int closed, opened, closedin, openedin, k;
    long n1;
+
    
    long n = System.currentTimeMillis();
    while (System.currentTimeMillis() - n < 5000); //wait for 5 seconds then remove all labels
@@ -113,8 +115,7 @@ class Ex {
 
     for (int i = 0; i < 6; ++i)
      labels[i][index].setVisible(true);
-    
-    
+
     n = System.currentTimeMillis();
     while (System.currentTimeMillis() - n < 2000) {
       fromClient = inFromClient.readLine();
@@ -133,7 +134,74 @@ class Ex {
      }
 
     }
-    
+
+    for (int i = 0; i < 6; ++i)
+     labels[i][index].setVisible(false);
+
+      System.out.println("closed:"+closed);
+      System.out.println("opened:"+opened);
+
+    if (closed > opened) {
+     closedin = 0;
+     openedin = 0;
+     for (k = 0; k < 6; ++k) {
+      labels[k][index].setVisible(true);
+      n = System.currentTimeMillis();
+
+      while (System.currentTimeMillis() - n < 2000) {
+        fromClient = inFromClient.readLine();
+
+       if (fromClient.equals("Close")) {
+        closedin = 1;
+        openedin = 0;
+        n1 = System.currentTimeMillis();
+        while (System.currentTimeMillis() - n1 < 1000) {
+          fromClient = inFromClient.readLine();
+          System.out.println(fromClient);
+         if (fromClient.equals("Close"))
+          closedin++;
+         if (fromClient.equals("Open"))
+          openedin++;
+        }
+
+       }
+
+      }
+
+      System.out.println("closedin:"+closedin);
+      System.out.println("openedin:"+openedin);
+
+      if (closedin > openedin) {
+       System.out.println(c[k][index]);
+       if(c[k][index].equals("SPACE"))
+       {
+        str=str+" ";
+      }
+        else if(c[k][index].equals("END"))
+        {
+          flag=false; 
+        }
+        else
+        {
+       str = str + c[k][index];
+        }
+       txt.setText(str);
+       f.add(txt);
+       labels[k][index].setVisible(false);
+       break;
+      }
+
+      labels[k][index].setVisible(false);
+     }
+    }
+
+    n = System.currentTimeMillis();
+    while (System.currentTimeMillis() - n < 2000);
+
+    index++;
+    if (index == 7)
+     index = 0;
+   }
   }
  }
 }
