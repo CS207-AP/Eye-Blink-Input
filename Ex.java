@@ -113,6 +113,27 @@ class Ex {
 
     for (int i = 0; i < 6; ++i)
      labels[i][index].setVisible(true);
+    
+    
+    n = System.currentTimeMillis();
+    while (System.currentTimeMillis() - n < 2000) {
+      fromClient = inFromClient.readLine();
+     if (fromClient.equals("Close")) {
+      closed = 1;
+      opened = 0;
+      n1 = System.currentTimeMillis();
+      fromClient = inFromClient.readLine();
+      while (System.currentTimeMillis() - n1 < 1000) {
+       if (fromClient.equals("Close"))
+        closed++;
+       if (fromClient.equals("Open"))
+        opened++;
+      }
+
+     }
+
+    }
+    
   }
  }
 }
