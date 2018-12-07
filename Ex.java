@@ -1,3 +1,4 @@
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
@@ -10,6 +11,11 @@ class Ex {
    ServerSocket server = new ServerSocket(8960);
    Socket client = server.accept();
    BufferedReader inFromClient = new BufferedReader(new InputStreamReader(client.getInputStream()));
+   
+   
+   JFrame f = new JFrame("Label Example");
+   JLabel[][] labels;
+   f.setSize(800, 800);
 
      String c[][] = {
     {
@@ -67,6 +73,28 @@ class Ex {
      ""
     }
    };
+   String str = "Text Entered: ";
+
+   int x = 100, y = 100;
+   labels = new JLabel[6][7];
+   for (int i = 0; i < 6; i++) {
+    for (int j = 0; j < 7; ++j) {
+     labels[i][j] = new JLabel(c[i][j]);
+     labels[i][j].setOpaque(true);
+     labels[i][j].setBounds(x * (j + 1), y * (i + 1), 50, 50);
+     f.add(labels[i][j]);
+    }
+   }
+
+   JLabel txt = new JLabel(str);
+   txt.setOpaque(true);
+   txt.setBounds(20, 0, 200, 50);
+   f.add(txt);
+
+   f.setLayout(null);
+   f.setVisible(true);
+   int closed, opened, closedin, openedin, k;
+   long n1;
   }
  }
 }
