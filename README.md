@@ -1,2 +1,2 @@
 # Eye-Blink-Input
-We do eye blink input
+An siftware based human computer interface for quadriplegics and people with disabled limbs.
