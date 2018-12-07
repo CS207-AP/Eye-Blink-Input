@@ -1,6 +1,16 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.ServerSocket;
+import java.net.Socket;
+
 class Ex {
  public static void main(String args[]) throws Exception {
   {
+   String fromClient;
+   ServerSocket server = new ServerSocket(8960);
+   Socket client = server.accept();
+   BufferedReader inFromClient = new BufferedReader(new InputStreamReader(client.getInputStream()));
+
      String c[][] = {
     {
      "END",
