@@ -1,2 +1,2 @@
 # Eye-Blink-Input
-An software based human computer interface for quadriplegics and people with disabled limbs.
+A software based human-computer interface for quadriplegics and differently abled individuals.
